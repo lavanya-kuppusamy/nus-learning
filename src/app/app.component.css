@@ -1,102 +1,231 @@
-*, *::before, *::after { box-sizing: border-box; }
+/* ============================================================
+   App component styles — Snip dark redesign
+   Token values live in styles.css (:root)
+   ============================================================ */
 
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, sans-serif;
-  background: #f5f5f5;
-  color: #222;
-}
-
+/* --- Layout container --- */
 .container {
-  max-width: 760px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-16) var(--space-4) var(--space-8);
 }
 
+/* Hero glow — behind the header */
+.container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--glow-gradient);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Hero header --- */
 header {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-12);
 }
 
-h1 { font-size: 2rem; margin: 0; }
-.tagline { color: #666; margin: 0.25rem 0 0; }
+h1 {
+  font-size: var(--text-hero);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin: 0;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
+.tagline {
+  color: var(--muted);
+  font-size: var(--text-base);
+  font-weight: 400;
+  margin: var(--space-2) 0 0;
+}
+
+/* --- Card shell (URL form + links table) --- */
 .card {
-  background: #fff;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 1.25rem;
-  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  margin-bottom: var(--space-4);
+  box-shadow: var(--shadow-card);
 }
 
+/* --- Chat-style pill input --- */
 .input-row {
   display: flex;
-  gap: .5rem;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: var(--space-2);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.input-row:focus-within {
+  border-color: rgba(255,107,107,0.35);
+  box-shadow: var(--glow-input);
+}
+
+.input-row:has(.input-error) {
+  border-color: rgba(220, 53, 69, 0.5);
 }
 
 input[type="text"] {
   flex: 1;
-  padding: .55rem .75rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: .95rem;
+  padding: var(--space-3) var(--space-4);
+  background: transparent;
+  border: none;
   outline: none;
-  transition: border-color .15s;
+  color: var(--text);
+  font-size: var(--text-base);
+  font-family: var(--font);
+  min-width: 0;
 }
-input[type="text"]:focus { border-color: #007bff; }
-input.input-error { border-color: #dc3545; }
+
+input[type="text"]::placeholder {
+  color: var(--muted);
+}
+
+/* input-error class on <input> is handled via parent :has() above */
 
 button {
-  padding: .55rem 1.25rem;
-  background: #007bff;
+  flex-shrink: 0;
+  padding: var(--space-3) var(--space-6);
+  background: var(--gradient-accent);
   color: #fff;
   border: none;
-  border-radius: 6px;
-  font-size: .95rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  font-family: var(--font);
   cursor: pointer;
-  transition: background .15s;
+  white-space: nowrap;
+  transition: opacity 0.15s, box-shadow 0.15s;
+  box-shadow: var(--glow-btn);
 }
-button:hover:not(:disabled) { background: #0056b3; }
-button:disabled { background: #aaa; cursor: default; }
 
-.hint { margin: .4rem 0 0; font-size: .85rem; }
-.error { color: #dc3545; }
+button:hover:not(:disabled) {
+  opacity: 0.88;
+  box-shadow: 0 4px 24px rgba(255,107,107,0.50);
+}
 
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+  box-shadow: none;
+}
+
+/* --- Validation / error hint --- */
+.hint {
+  margin: var(--space-3) var(--space-4) 0;
+  font-size: var(--text-sm);
+}
+
+.error {
+  color: var(--error);
+}
+
+/* --- Success result notice --- */
 .result {
   display: flex;
   align-items: center;
-  margin-top: 1rem;
-  padding: .75rem;
-  background: #e8f5e9;
-  border-radius: 6px;
-  font-size: .95rem;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(255,107,107,0.07);
+  border: 1px solid rgba(255,107,107,0.22);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--text);
 }
-.result a { color: #2e7d32; font-weight: 600; word-break: break-all; }
 
-h2 { margin: 0 0 1rem; font-size: 1.1rem; }
-.empty { color: #888; margin: 0; }
+.result a {
+  color: var(--accent-1);
+  font-weight: 600;
+  word-break: break-all;
+  text-decoration: none;
+}
 
-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.result a:hover {
+  text-decoration: underline;
+}
+
+/* --- Links table card --- */
+h2 {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.empty {
+  color: var(--muted);
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
 th {
   text-align: left;
-  padding: .5rem .75rem;
-  border-bottom: 2px solid #eee;
-  color: #555;
-  font-weight: 600;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-weight: 500;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
+
 td {
-  padding: .5rem .75rem;
-  border-bottom: 1px solid #f0f0f0;
+  padding: var(--space-3);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
   vertical-align: middle;
+  color: var(--text);
 }
-tr:last-child td { border-bottom: none; }
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover td {
+  background: rgba(255,255,255,0.02);
+}
 
 .url-cell {
   max-width: 360px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--muted);
 }
-.hits { text-align: center; }
-td a { color: #007bff; text-decoration: none; font-weight: 600; }
-td a:hover { text-decoration: underline; }
+
+.hits {
+  text-align: center;
+  color: var(--muted);
+}
+
+td a {
+  color: var(--accent-1);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+td a:hover {
+  text-decoration: underline;
+}
