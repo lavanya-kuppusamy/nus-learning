@@ -1,0 +1,64 @@
+<div class="container">
+  <header>
+    <h1>&#9988; Snip</h1>
+    <p class="tagline">Paste a long URL, get a short one.</p>
+  </header>
+
+  <section class="card">
+    <form (ngSubmit)="shorten()">
+      <div class="input-row">
+        <input
+          type="text"
+          placeholder="https://example.com/very/long/url"
+          [formControl]="urlControl"
+          [class.input-error]="urlControl.invalid && urlControl.touched"
+        />
+        <button type="submit" [disabled]="submitting()">
+          {{ submitting() ? '\u2026' : 'Shorten' }}
+        </button>
+      </div>
+      @if (urlControl.invalid && urlControl.touched) {
+        <p class="hint error">Please enter a valid http(s) URL.</p>
+      }
+    </form>
+
+    @if (latestLink()) {
+      <div class="result">
+        <span>Short link:&nbsp;</span>
+        <a [href]="latestLink()!.shortUrl" target="_blank" rel="noopener">
+          {{ latestLink()!.shortUrl }}
+        </a>
+      </div>
+    }
+
+    @if (error()) {
+      <p class="hint error">{{ error() }}</p>
+    }
+  </section>
+
+  <section class="card">
+    <h2>All Links</h2>
+    @if (links().length === 0) {
+      <p class="empty">No links yet. Shorten one above!</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Original URL</th>
+            <th>Hits</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (link of links(); track link.code) {
+            <tr>
+              <td><a [href]="link.shortUrl" target="_blank" rel="noopener">{{ link.code }}</a></td>
+              <td class="url-cell" [title]="link.url">{{ link.url }}</td>
+              <td class="hits">{{ link.hits }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</div>
