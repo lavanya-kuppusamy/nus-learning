@@ -1,0 +1,12 @@
+[submodule "backend"]
+	path = backend
+	url = https://github.com/lavanya-kuppusamy/nus-learning
+	branch = backend
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/lavanya-kuppusamy/nus-learning
+	branch = frontend
+[submodule "cli"]
+	path = cli
+	url = https://github.com/lavanya-kuppusamy/nus-learning
+	branch = cli
