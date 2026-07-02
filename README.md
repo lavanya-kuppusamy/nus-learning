@@ -145,3 +145,39 @@ git push
 > **Tip:** `git submodule update --remote` fetches the latest commit on the tracked
 > branch. Without `--remote` it only checks out the SHA already stored in the
 > superproject — useful when you want a reproducible checkout of a known state.
+
+---
+
+## Release bundle
+
+The `bundle` submodule (tracking `origin/bundle`) is **generated output** — never
+edit it by hand.  It is assembled by `scripts/build-bundle.mjs`, which:
+
+1. Updates `backend`, `frontend`, and `cli` to their branch tips.
+2. Runs `npm install` + `ng build` inside `frontend/`.
+3. Writes into `bundle/`:
+   - `server.js` — copied from `backend/`
+   - `cli.js` — copied from `cli/`
+   - `public/` — Angular build output; Bun serves it as static files (`.env` sets `PUBLIC_DIR=./public`)
+   - `package.json` — `"start": "bun server.js"` (no `"type"` field so `cli.js` also runs under plain Node)
+   - `Dockerfile` — `FROM oven/bun:1-alpine`, exposes port 3000
+   - `.dockerignore` and `railway.json` (DOCKERFILE builder)
+4. Commits the result inside `bundle/` and bumps the superproject pointer on `main` — each step is a safe no-op if nothing changed.
+
+**Rebuild and publish:**
+
+```bash
+node scripts/build-bundle.mjs          # local commit only
+node scripts/build-bundle.mjs --push   # commit + push bundle branch + main
+```
+
+**Run the self-contained bundle locally:**
+
+```bash
+cd bundle
+bun start          # serves API + SPA on :3000
+# open http://localhost:3000
+```
+
+**Deploy to Railway:** push the `bundle` branch; Railway picks up `railway.json`
+and builds from the `Dockerfile` automatically.
