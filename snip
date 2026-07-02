@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# snip — bash wrapper; forwards all arguments to cli.js
+exec node "$(dirname "$0")/cli.js" "$@"
